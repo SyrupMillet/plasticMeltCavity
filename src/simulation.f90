@@ -63,6 +63,17 @@ contains
       if (j.eq.pg%jmax) isIn=.true.
    end function yp_locator
 
+   !> Function that locolizes the bottom
+   function ym_locator(pg,i,j,k) result(isIn)
+      use pgrid_class, only: pgrid
+      implicit none
+      class(pgrid), intent(in) :: pg
+      integer, intent(in) :: i,j,k
+      logical :: isIn
+      isIn=.false.
+      if (j.eq.pg%jmin+1) isIn=.true.
+   end function ym_locator
+
    !> Initialization of problem solver
    subroutine simulation_init
       use param, only: param_read
@@ -175,6 +186,7 @@ contains
          call param_read('Gravity',fs%gravity)
          ! Add boundary conditions
          call fs%add_bcond(name='top' ,type=dirichlet ,face='x',dir=+1,canCorrect=.false.,locator=yp_locator)
+         call fs%add_bcond(name='bottom' ,type=dirichlet ,face='x',dir=-1,canCorrect=.false.,locator=ym_locator)
          ! Configure pressure solver
          ps=hypre_str(cfg=cfg,name='Pressure',method=pcg_pfmg2,nst=7)
          ps%maxlevel=10
@@ -196,6 +208,11 @@ contains
          do n=1,mybc%itr%no_
             i=mybc%itr%map(1,n); j=mybc%itr%map(2,n); k=mybc%itr%map(3,n)
             fs%U(i,j,k)   = cavityU
+         end do
+         call fs%get_bcond('bottom',mybc)
+         do n=1,mybc%itr%no_
+            i=mybc%itr%map(1,n); j=mybc%itr%map(2,n); k=mybc%itr%map(3,n)
+            fs%U(i,j,k)   = -1.0_WP*cavityU
          end do
          ! Calculate cell-centered velocities and divergence
          call fs%interp_vel(Ui,Vi,Wi)
@@ -341,6 +358,11 @@ contains
             do n=1,mybc%itr%no_
                i=mybc%itr%map(1,n); j=mybc%itr%map(2,n); k=mybc%itr%map(3,n)
                fs%U(i,j,k)   = cavityU
+            end do
+            call fs%get_bcond('bottom',mybc)
+            do n=1,mybc%itr%no_
+               i=mybc%itr%map(1,n); j=mybc%itr%map(2,n); k=mybc%itr%map(3,n)
+               fs%U(i,j,k)   = -1.0_WP*cavityU
             end do
 
             ! Solve Poisson equation
