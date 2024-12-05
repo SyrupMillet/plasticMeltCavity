@@ -2,34 +2,36 @@
 Partition :	8 1 1
 
 # Mesh definition
-Lx :	0.06
-Ly :	0.06
-Lz :	0.06
-nx :	64
-ny :	64
-nz :	64
+Lx :	0.04
+Ly :	0.04
+Lz :	0.04
+nx :	56
+ny :	56
+nz :	56
 
 # Case parameters
-Droplet diameter : 0.01
-Droplet center : 0 0.05 0
+Droplet diameter : 0.015
+Droplet center : 0 0.02 0
+
+Cavity velocity : 0.05
 
 # Fluid properties
 Gravity :                     0 -9.81 0
-Liquid dynamic viscosity :    1.137e-3
-Gas dynamic viscosity :       1.780e-5
-Liquid density :              1000
-Gas density :                 1.226
-Surface tension coefficient : 0.0728
-Static contact angle :        140
+Melt dynamic viscosity :    500
+Liquid dynamic viscosity :       1e-4
+Melt density :              960
+Liquid density :                 1000
+Surface tension coefficient : 0.03
+Static contact angle :        170
 
 # Time integration
-Max timestep size : 5e-4
+Max timestep size : 1e-6
 Max cfl number :    0.9
 Max time :          1
 
 # Pressure solver
-Pressure tolerance : 1e-4
+Pressure tolerance : 1e-5
 Pressure iteration : 100
 
 # Ensight output
-Ensight output period : 5e-3
+Ensight output period : 1e-4
